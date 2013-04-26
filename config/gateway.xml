@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gateway xmlns="http://www.zend.com/gateway/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+   <authenticate>
+      <adapter type="token">
+         <resolver type="callback">
+            <callback>Application\Service\AuthenticationService::validateToken</callback>
+         </resolver>
+      </adapter>
+   </authenticate>
+   <response default="true" type="json">
+      <header name="Access-Control-Allow-Origin" value="*"/>
+      <header name="no-cache" value="true"/>
+   </response>
+   <resource authenticate="true" dispatchable="Application\Controller\CategoryRestController" url="/categories[/:id]">
+      <parameters>
+         <parameter name="id" required="false" source="route"/>
+         <parameter name="name" required="true" source="body"/>
+         <parameter name="description" required="false" source="body"/>
+         <parameter name="id" required="true" source="body"/>
+      </parameters>
+   </resource>
+   <resource authenticate="true" dispatchable="Application\Controller\TaskRestController" url="/tasks[/:id]">
+      <parameters>
+         <parameter name="id" required="false" source="route"/>
+         <parameter name="object" required="true" source="body"/>
+         <parameter name="beginning" required="false" source="body"/>
+         <parameter name="end" required="false" source="body"/>
+         <parameter name="status" required="true" source="body"/>
+         <parameter name="priority" required="true" source="body"/>
+         <parameter name="id" required="true" source="body"/>
+      </parameters>
+   </resource>
+   <resource authenticate="true" dispatchable="Application\Controller\CommentRestController" url="/tasks/:task_id/comments[/:id]">
+      <parameters>
+         <parameter name="id" required="false" source="route"/>
+         <parameter name="task_id" required="true" source="route"/>
+         <parameter name="content" required="true" source="body"/>
+         <parameter name="created" required="true" source="body"/>
+      </parameters>
+   </resource>
+   <route authenticate="false" dispatchable="Application\Controller\UserRpcController::postAuthenticateAction" url="/user/authenticate" methods="POST">
+      <parameters>
+         <parameter name="username" required="true" source="body"/>
+         <parameter name="password" required="true" source="body"/>
+      </parameters>
+   </route>
+   <route authenticate="false" dispatchable="Application\Controller\UserRpcController::postRegisterAction" url="/user/register" methods="POST"/>
+</gateway>
